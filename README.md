@@ -1,5 +1,5 @@
 # apigenerator
 
 ```
-$ python3 generator.py -n <controllername>
+$ python3 generate.py -n <controllername>
 ```
