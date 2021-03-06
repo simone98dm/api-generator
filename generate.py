@@ -8,13 +8,135 @@ placeholder = "REPLACEME"
 
 class TS:
     name = ""
-    template_app = open("./templates/ts/app.ts", "r").read()
-    tsconfig = open("./templates/ts/tsconfig.json", "r").read()
-    template_route = open("./templates/ts/src/routes/template.route.ts", "r").read()
-    template_controller = open("./templates/ts/src/controllers/template.controller.ts", "r").read()
-    template_config = open("./templates/ts/src/configs/template.config.ts", "r").read()
-    package_json = open("./templates/ts/package.json", "r").read()
-    appconfig = open("./templates/ts/src/configs/api.config.ts", "r").read()
+    template_app = '''import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
+import morgan from "morgan";
+//imports
+import { port, prefix } from "./src/configs/api.config";
+
+const server = express();
+server.use(cors());
+server.use(bodyParser.json());
+server.use(morgan("dev"));
+//middlewares
+
+server.listen(port, () =>
+console.log("API-ENDPOINT are running (:" + port + ")")
+);
+'''
+    tsconfig = '''{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "declaration": false,
+    "outDir": "./dist",
+    "strict": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}
+'''
+    template_route = '''import express from "express";
+import { prefix } from "../configs/REPLACEME.config";
+const router = express.Router();
+
+router.get(prefix, async (req, res) => {
+  return res.status(200).json().end();
+});
+
+router.get(prefix + "/:id", async (req, res) => {
+  if (!req.params.id) {
+    return res.status(404).end();
+  }
+  return res.status(200).json().end();
+});
+
+router.post(prefix, async (req, res) => {
+  if (!req.body) {
+    return res.status(404).end();
+  }
+  return res.status(200).json().end();
+});
+
+router.put(prefix, async (req, res) => {});
+
+router.delete(prefix, async (req, res) => {});
+
+export { router };
+'''
+    template_controller = '''async function getREPLACEMEs(): any[] {
+  return new Promise<any>();
+}
+async function getREPLACEME(id: string): any {
+  return new Promise<any>();
+}
+async function deleteREPLACEME(id: string): boolean {
+  return new Promise<boolean>();
+}
+async function updateREPLACEME(obj: any): boolean {
+  return new Promise<boolean>();
+}
+async function createREPLACEME(obj: any): string {
+  return new Promise<boolean>();
+}
+
+export {
+  getREPLACEME,
+  getREPLACEMEs,
+  deleteREPLACEME,
+  updateREPLACEME,
+  createREPLACEME,
+};
+'''
+    template_config ='''const prefix = "/REPLACEME";
+export { prefix };
+'''
+    package_json = '''{
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "pg": "^8.5.1"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.0",
+    "@types/cors": "^2.8.10",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.11",
+    "@types/morgan": "^1.9.2",
+    "@types/pg": "^7.14.11"
+  },
+  "name": "ts",
+  "version": "1.0.0",
+  "main": "dist/app.js",
+  "scripts": {
+    "build": "tsc --build",
+    "start": "ts-node app.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
+'''
+    appconfig = '''const prefix = "/api";
+const port = 3000;
+export { prefix, port };'''
 
     def __init__(self, name):
         self.name = name
@@ -44,12 +166,96 @@ class TS:
 class JS:
     name = ""
 
-    template_app = open("./templates/js/app.js", "r").read()
-    template_route = open("./templates/js/src/routes/template.route.js", "r").read()
-    template_controller = open("./templates/js/src/controllers/template.controller.js", "r").read()
-    template_config = open("./templates/js/src/configs/template.config.js", "r").read()
-    package_json = open("./templates/js/package.json", "r").read()
-    appconfig = open("./templates/js/src/configs/api.config.js", "r").read()
+    template_app = '''const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const config = require('./src/configs/api.config');
+//imports
+
+const server = express();
+server.use(cors());
+server.use(bodyParser.json());
+server.use(morgan('dev'));
+//middlewares
+
+server.listen(config.port, () =>
+  console.log('API-ENDPOINT are running (:' + config.port + ')')
+);
+'''
+    template_route = '''const express = require("express");
+const config = require("../configs/REPLACEME.config");
+const router = express.Router();
+
+router.get(config.prefix, async (req, res) => {
+  return res.status(200).json().end();
+});
+
+router.get(config.prefix + "/:id", async (req, res) => {
+  if (!req.params.id) {
+    return res.status(404).end();
+  }
+  return res.status(200).json().end();
+});
+
+router.post(config.prefix, async (req, res) => {
+  if (!req.body) {
+    return res.status(404).end();
+  }
+  return res.status(200).json().end();
+});
+
+router.put(config.prefix, async (req, res) => {});
+
+router.delete(config.prefix, async (req, res) => {});
+
+module.exports = router;
+'''
+    template_controller = '''async function getREPLACEMEs() {
+}
+async function getREPLACEME(id) {
+}
+async function deleteREPLACEME(id) {
+}
+async function updateREPLACEME(obj) {
+}
+async function createREPLACEME(obj) {
+}
+
+module.exports = {
+    getREPLACEMEs,
+    getREPLACEME,
+    deleteREPLACEME,
+    updateREPLACEME,
+    createREPLACEME
+}
+'''
+    template_config = '''const prefix = "/REPLACEME";
+module.exports = { prefix };
+'''
+    package_json = '''{
+  "name": "js",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0"
+  }
+}
+'''
+    appconfig = '''const prefix = "/api";
+const port = 3000;
+module.exports = { prefix, port };
+'''
 
     def __init__(self, name):
         self.name = name
