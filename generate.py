@@ -112,7 +112,7 @@ def generate(name, type, path):
         else:
             app = ts.get_app()
 
-        imports = "//project-imports\nconst {}Routes = required('./src/routes/{}.route');".format(name, name)
+        imports = "//project-imports\nimport * as {}Routes from './routes/{}.route';".format(name, name)
         middlewares = "//defile-routes\nserver.use(prefix, {}Routes.router);".format(name)
 
         app = app.replace("//project-imports", imports).replace("//defile-routes", middlewares)
