@@ -112,10 +112,10 @@ def generate(name, type, path):
         else:
             app = ts.get_app()
 
-        imports = "//project-imports\nimport * as {}Routes from './routes/{}.route';".format(name, name)
-        middlewares = "//defile-routes\nserver.use(prefix, {}Routes.router);".format(name)
+        imports = "//imports\nimport * as {}Routes from './routes/{}.route';".format(name, name)
+        middlewares = "//middlewares\nserver.use(prefix, {}Routes.router);".format(name)
 
-        app = app.replace("//project-imports", imports).replace("//defile-routes", middlewares)
+        app = app.replace("//imports", imports).replace("//middlewares", middlewares)
         save_file("{}{}".format(path, "/app.ts"), app)
         save_file("{}{}".format(path, "/package.json"), packagejson)
         save_file("{}{}".format(path, "/tsconfig.json"), tsconfig)
@@ -136,10 +136,10 @@ def generate(name, type, path):
         else:
             app = js.get_app()
 
-        imports = "//project-imports\nconst {}Routes = required('./src/routes/{}.route');".format(name, name)
-        middlewares = "//defile-routes\nserver.use(config.prefix, {}Routes.router);".format(name)
+        imports = "//imports\nconst {}Routes = required('./src/routes/{}.route');".format(name, name)
+        middlewares = "//middlewares\nserver.use(config.prefix, {}Routes.router);".format(name)
 
-        app = app.replace("//project-imports",imports).replace("//defile-routes", middlewares)
+        app = app.replace("//imports",imports).replace("//middlewares", middlewares)
         save_file("{}{}".format(path, "/app.js"), app)
         save_file("{}{}".format(path, "/package.json"), packagejson)
         save_file("{}{}".format(pathconfig, "/{}".format("app.config.js")), appconfig)
