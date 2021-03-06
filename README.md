@@ -2,5 +2,5 @@
 
 ### Run
 ```
-$ python3 generate.py -n <controllername> -t [js,ts]
+$ python3 generate.py -n <REPLACEME> -t [js,ts] -p <path>
 ```
