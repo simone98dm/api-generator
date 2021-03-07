@@ -2,16 +2,17 @@ import sys
 import getopt
 import os
 import base64
-from abc import ABCMeta, abstractmethod
 
 placeholder = "REPLACEME"
 
 class TS:
     name = ""
+
     template_app = '''import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import morgan from "morgan";
+import consola from "consola";
 //imports
 import { port, prefix } from "./src/configs/api.config";
 
@@ -21,9 +22,9 @@ server.use(bodyParser.json());
 server.use(morgan("dev"));
 //middlewares
 
-server.listen(port, () =>
-console.log("API-ENDPOINT are running (:" + port + ")")
-);
+server.get(prefix, (req, res) => res.end('API working!'))
+
+server.listen(port, () => consola.success(`API listening on 'http://localhost:${port}/api'`));
 '''
     tsconfig = '''{
   "compilerOptions": {
@@ -77,20 +78,25 @@ router.delete(prefix, async (req, res) => {});
 
 export { router };
 '''
+    template_model = '''export interface REPLACEMEDto {
+
+}
+'''
+
     template_controller = '''async function getREPLACEMEs(): any[] {
-  return new Promise<any>();
+  return new Promise<any>((resolve, reject) => {});
 }
 async function getREPLACEME(id: string): any {
-  return new Promise<any>();
+  return new Promise<any>((resolve, reject) => {});
 }
 async function deleteREPLACEME(id: string): boolean {
-  return new Promise<boolean>();
+  return new Promise<boolean>((resolve, reject) => {});
 }
 async function updateREPLACEME(obj: any): boolean {
-  return new Promise<boolean>();
+  return new Promise<boolean>((resolve, reject) => {});
 }
 async function createREPLACEME(obj: any): string {
-  return new Promise<boolean>();
+  return new Promise<boolean>((resolve, reject) => {});
 }
 
 export {
@@ -111,7 +117,8 @@ export { prefix };
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "morgan": "^1.10.0",
-    "pg": "^8.5.1"
+    "pg": "^8.5.1",
+    "consola": "^2.15.3"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.0",
@@ -119,7 +126,8 @@ export { prefix };
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.11",
     "@types/morgan": "^1.9.2",
-    "@types/pg": "^7.14.11"
+    "@types/pg": "^7.14.11",
+    "@types/consola": "^2.2.5"
   },
   "name": "ts",
   "version": "1.0.0",
@@ -142,16 +150,16 @@ export { prefix, port };'''
         self.name = name
 
     def get_route(self):
-        return (self.template_route).replace(placeholder, self.name).replace(placeholder, self.name.capitalize())
+        return (self.template_route).replace(placeholder, self.name)
 
     def get_controller(self):
-        return (self.template_controller).replace(placeholder, self.name).replace(placeholder, self.name.capitalize())
+        return (self.template_controller).replace(placeholder, self.name.capitalize())
 
     def get_config(self):
-        return (self.template_config).replace(placeholder, self.name).replace(placeholder, self.name.capitalize())
+        return (self.template_config).replace(placeholder, self.name)
 
     def get_app(self):
-        return (self.template_app).replace(placeholder, self.name).replace(placeholder, self.name.capitalize())
+        return (self.template_app).replace(placeholder, self.name)
 
     def get_package(self):
         return (self.package_json).replace(placeholder, self.name)
@@ -160,7 +168,10 @@ export { prefix, port };'''
         return (self.tsconfig).replace(placeholder, self.name)
 
     def get_app_config(self):
-        return (self.appconfig).replace(placeholder, self.name.capitalize())
+        return (self.appconfig).replace(placeholder, self.name)
+
+    def get_model(self):
+        return (self.template_model).replace(placeholder, self.name.capitalize())
 
 
 class JS:
@@ -170,6 +181,7 @@ class JS:
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const consola = require('consola');
 const config = require('./src/configs/api.config');
 //imports
 
@@ -179,9 +191,9 @@ server.use(bodyParser.json());
 server.use(morgan('dev'));
 //middlewares
 
-server.listen(config.port, () =>
-  console.log('API-ENDPOINT are running (:' + config.port + ')')
-);
+server.get('/api', (req, res) => res.end('API working!'))
+
+server.listen(config.port, () => consola.success(`API listening on 'http://localhost:${config.port}/api'`));
 '''
     template_route = '''const express = require("express");
 const config = require("../configs/REPLACEME.config");
@@ -212,14 +224,19 @@ router.delete(config.prefix, async (req, res) => {});
 module.exports = router;
 '''
     template_controller = '''async function getREPLACEMEs() {
+  return new Promise<any>((resolve, reject) => {});
 }
 async function getREPLACEME(id) {
+  return new Promise<any>((resolve, reject) => {});
 }
 async function deleteREPLACEME(id) {
+  return new Promise<boolean>((resolve, reject) => {});
 }
 async function updateREPLACEME(obj) {
+  return new Promise<boolean>((resolve, reject) => {});
 }
 async function createREPLACEME(obj) {
+  return new Promise<boolean>((resolve, reject) => {});
 }
 
 module.exports = {
@@ -248,7 +265,8 @@ module.exports = { prefix };
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "consola": "^2.15.3"
   }
 }
 '''
@@ -261,22 +279,22 @@ module.exports = { prefix, port };
         self.name = name
 
     def get_route(self):
-        return (self.template_route).replace(placeholder, self.name).replace(placeholder, self.name.capitalize())
+        return (self.template_route).replace(placeholder, self.name)
 
     def get_controller(self):
-        return (self.template_controller).replace(placeholder, self.name).replace(placeholder, self.name.capitalize())
-
-    def get_config(self):
-        return (self.template_config).replace(placeholder, self.name).replace(placeholder, self.name.capitalize())
+        return (self.template_controller).replace(placeholder, self.name.capitalize())
 
     def get_app(self):
-        return (self.template_app).replace(placeholder, self.name).replace(placeholder, self.name.capitalize())
+        return (self.template_app).replace(placeholder, self.name)
+
+    def get_config(self):
+        return (self.template_config).replace(placeholder, self.name)
 
     def get_package(self):
         return (self.package_json).replace(placeholder, self.name)
 
     def get_app_config(self):
-        return (self.appconfig).replace(placeholder, self.name.capitalize())
+        return (self.appconfig).replace(placeholder, self.name)
 
 
 def prepare_env(p):
@@ -304,36 +322,43 @@ def generate(name, type, path):
     prepare_env(pathdriver)
     prepare_env(pathmodels)
 
+    main_controller = ""
+    main_config = ""
+    main_route = ""
+    appconfig = ""
+    app = ""
+    tsconfig = ""
+    packagejson = ""
+    model = ""
+
+    extension = ""
+
     if type == "ts":
         ts = TS(name)
-        ctr = ts.get_controller()
-        cfg = ts.get_config()
-        rt = ts.get_route()
+        extension = "ts"
+        main_controller = ts.get_controller()
+        main_config = ts.get_config()
+        main_route = ts.get_route()
         appconfig = ts.get_app_config()
         tsconfig = ts.get_tsconfig()
         packagejson = ts.get_package()
+        model = ts.get_model()
 
         if os.path.isfile("{}/app.ts".format(path)):
             app = open("{}/app.ts".format(path), "r").read()
         else:
             app = ts.get_app()
 
-        imports = "//imports\nimport * as {}Routes from './routes/{}.route';".format(name, name)
+        imports = "//imports\nimport * as {}Routes from './src/routes/{}.route';".format(name, name)
         middlewares = "//middlewares\nserver.use(prefix, {}Routes.router);".format(name)
 
-        app = app.replace("//imports", imports).replace("//middlewares", middlewares)
-        save_file("{}{}".format(path, "/app.ts"), app)
-        save_file("{}{}".format(path, "/package.json"), packagejson)
-        save_file("{}{}".format(path, "/tsconfig.json"), tsconfig)
-        save_file("{}{}".format(pathconfig, "/{}".format("app.config.ts")), appconfig)
-        save_file("{}{}".format(pathcontroller, "/{}{}".format(name, ".controller.ts")), ctr)
-        save_file("{}{}".format(pathconfig, "/{}{}".format(name, ".config.ts")), cfg)
-        save_file("{}{}".format(pathroute, "/{}{}".format(name, ".route.ts")), rt)
+        app = app.replace("//imports", imports).replace("//middlewares", middlewares)        
     elif type == "js":
         js = JS(name)
-        ctr = js.get_controller()
-        cfg = js.get_config()
-        rt = js.get_route()
+        extension = "js"
+        main_controller = js.get_controller()
+        main_config = js.get_config()
+        main_route = js.get_route()
         appconfig = js.get_app_config()
         packagejson = js.get_package()
 
@@ -342,20 +367,39 @@ def generate(name, type, path):
         else:
             app = js.get_app()
 
-        imports = "//imports\nconst {}Routes = required('./src/routes/{}.route');".format(name, name)
-        middlewares = "//middlewares\nserver.use(config.prefix, {}Routes.router);".format(name)
+        imports = "//imports\nconst {}Routes = require('./src/routes/{}.route');".format(name, name)
+        middlewares = "//middlewares\nserver.use(config.prefix, {}Routes);".format(name)
 
-        app = app.replace("//imports",imports).replace("//middlewares", middlewares)
-        save_file("{}{}".format(path, "/app.js"), app)
-        save_file("{}{}".format(path, "/package.json"), packagejson)
-        save_file("{}{}".format(pathconfig, "/{}".format("app.config.js")), appconfig)
-        save_file("{}{}".format(pathcontroller, "/{}{}".format(name, ".controller.js")), ctr)
-        save_file("{}{}".format(pathconfig, "/{}{}".format(name, ".config.js")), cfg)
-        save_file("{}{}".format(pathroute, "/{}{}".format(name, ".route.js")), rt)
+        app = app.replace("//imports",imports).replace("//middlewares", middlewares)        
     else:
         return
     
+    path_app = "{}{}".format(path, "/app.{}".format(extension))
+    path_packagejson = "{}{}".format(path, "/package.json")
+    path_appconfig = "{}{}".format(pathconfig, "/{}".format("api.config.{}".format(extension)))
+    path_tsconfig = "{}{}".format(path, "/tsconfig.json")
+
+    path_controller = "{}{}".format(pathcontroller, "/{}{}".format(name, ".controller.{}".format(extension)))
+    path_config = "{}{}".format(pathconfig, "/{}{}".format(name, ".config.{}".format(extension)))
+    path_route = "{}{}".format(pathroute, "/{}{}".format(name, ".route.{}".format(extension)))
+    path_model = "{}{}".format(pathmodels, "/{}{}".format(name, "Dto.{}".format(extension)))
+
+
+    save_file(path_app, app)
+    save_file(path_packagejson, packagejson)
+    save_file(path_appconfig, appconfig)
+    
+    if type == "ts": save_file(path_tsconfig, tsconfig)
+    if type == "ts": save_file(path_model, model)
+
+    save_file(path_controller, main_controller)
+    save_file(path_config, main_config)
+    save_file(path_route, main_route)
+
     print("[!] Completed...")
+    print("    cd {}".format(path))
+    print("    npm install")
+    print("    npm start")
 
 
 def main(argv):
