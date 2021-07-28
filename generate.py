@@ -224,19 +224,19 @@ router.delete(config.prefix, async (req, res) => {});
 module.exports = router;
 '''
     template_controller = '''async function getREPLACEMEs() {
-  return new Promise<any>((resolve, reject) => {});
+  return new Promise((resolve, reject) => {});
 }
 async function getREPLACEME(id) {
-  return new Promise<any>((resolve, reject) => {});
+  return new Promise((resolve, reject) => {});
 }
 async function deleteREPLACEME(id) {
-  return new Promise<boolean>((resolve, reject) => {});
+  return new Promise((resolve, reject) => {});
 }
 async function updateREPLACEME(obj) {
-  return new Promise<boolean>((resolve, reject) => {});
+  return new Promise((resolve, reject) => {});
 }
 async function createREPLACEME(obj) {
-  return new Promise<boolean>((resolve, reject) => {});
+  return new Promise((resolve, reject) => {});
 }
 
 module.exports = {
@@ -386,7 +386,10 @@ def generate(name, type, path):
 
 
     save_file(path_app, app)
-    save_file(path_packagejson, packagejson)
+
+    if not os.path.isfile(path_packagejson):
+      save_file(path_packagejson, packagejson)
+    
     save_file(path_appconfig, appconfig)
     
     if type == "ts": save_file(path_tsconfig, tsconfig)
